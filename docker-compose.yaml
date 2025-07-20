@@ -1,14 +1,23 @@
 #Docker compose is a tool which is used to managae and execute multi cntainer applications
-
+#we create our own bridge network to communicate with components
+#volumes is used for stateful applications like DB apps which can be managed by docker itself. 
+#When containers deleted and re-created still data would't be lost
 networks:
   default:
     driver: bridge
     name: roboshop
     external: true #If network already created using docker network create
+volumes:
+  mongodb:
+  redis:
+  mysql:
+  rabbitmq:  # these are creating volume like docker volume create rabbitmq
 services:
   mongodb:
     image: johnson0309/mongodb:v1
     container_name: mongodb
+    volumes:
+    - mongodb:/data/db
   catalogue:
     image: johnson0309/catalogue:v1
     container_name: catalogue
@@ -17,6 +26,8 @@ services:
   redis:
     image: redis:7.0
     container_name: redis
+    volumes:
+    - redis:/data            #/data is the dir where docker stores the volumes
   user:
     image: johnson0309/user:v1
     container_name: user
@@ -32,6 +43,8 @@ services:
   mysql:
     image: johnson0309/mysql:v1
     container_name: mysql
+    volumes:
+    - mysql:/var/lib/mysql
   shipping:
     image: johnson0309/shipping:v1
     container_name: shipping
@@ -44,6 +57,8 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: roboshop
       RABBITMQ_DEFAULT_PASS: roboshop123
+    volumes:
+    - rabbitmq:/var/lib/rabbitmq
   payment:
     image: johnson0309/payment:v1
     container_name: payment
