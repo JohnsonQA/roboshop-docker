@@ -1,3 +1,6 @@
+#We always should keep the frequently change instruction at the botton for better layer optimization. so that above 
+# instructions can be re-use from cache and new layers creates for changed instructions
+
 FROM node:20
 WORKDIR /opt/server
 ENV MONGO="true" \
